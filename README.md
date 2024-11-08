@@ -19,7 +19,6 @@ Cette application est une API de gestion de tâches développée en Node.js avec
 2. Installez les dépendances :
    ```
    npm install
-
 3. Configurer les variables d'environnement
    Creez votre fichier .env et créez les variables suivante:
    ```
@@ -27,7 +26,6 @@ Cette application est une API de gestion de tâches développée en Node.js avec
      DB_PASSWORD='votre_mot_de_passe'
      DB_NAME='votre_nom_de_BDD'
      DB_BIS_NAME='votre_nom_de_BDD_avec_ORM'
-
 5. Démarez le serveur :
    ```
    npm run start
