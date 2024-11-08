@@ -16,11 +16,22 @@ router.get("/", async function (req, res, next) {
       where.title = { [Op.like]: `%${title}%` };
     }
     if (isDone !== undefined) {
-      where.done = isDone === 'true';
+      where.done = isDone === "true";
     }
     if (isRetarded !== undefined) {
       const now = new Date();
       where.dueDate = { [Op.lt]: now };
+    }
+
+    if (nbDisplayed && pages) {
+      const totalTasks = await Task.count({ where });
+      const totalPages = Math.ceil(totalTasks / parseInt(nbDisplayed));
+      if (pages >= Math.round(totalPages)) {
+        return res
+          .status(401)
+          .json({ error: "Page not found, max page is " + (totalPages - 1) });
+        return;
+      }
     }
 
     const tasks = await Task.findAll({
@@ -28,8 +39,8 @@ router.get("/", async function (req, res, next) {
       limit: nbDisplayed ? parseInt(nbDisplayed) : undefined,
       offset: pages && nbDisplayed ? pages * parseInt(nbDisplayed) : undefined,
       include: {
-        model: Type
-      }
+        model: Type,
+      },
     });
 
     res.json(tasks);
@@ -43,18 +54,18 @@ router.get("/:id", async function (req, res, next) {
 
   const task = await Task.findByPk(id, {
     include: {
-      model: Type
-  }});
-  if(!task) {
+      model: Type,
+    },
+  });
+  if (!task) {
     res.status(404);
-    res.json({error: "Task not found"});
+    res.json({ error: "Task not found" });
   } else {
     res.json(task);
   }
 });
 
 router.post("/", async function (req, res, next) {
-  
   try {
     const { title, description, dueDate, TypeId } = req.body;
     if (!title || !description || !dueDate || !TypeId) {
@@ -65,20 +76,23 @@ router.post("/", async function (req, res, next) {
       description: description,
       done: false,
       dueDate: dueDate,
-      TypeId: TypeId
+      TypeId: TypeId,
     });
     res.status(201);
     res.json(task);
   } catch (error) {
     next(error);
   }
-
 });
 
 router.put("/:id", async function (req, res, next) {
   const id = req.params.id;
   const { title, description, dueDate, done, TypeId } = req.body;
-  const task = await Task.findByPk(id);
+  const task = await Task.findByPk(id, {
+    include: {
+      model: Type,
+    },
+  });
   if (!task) {
     res.status(404);
     res.json({ error: "Task not found" });
@@ -96,9 +110,13 @@ router.put("/:id", async function (req, res, next) {
   }
 });
 
-router.delete('/:id', async function (req, res, next) {
+router.delete("/:id", async function (req, res, next) {
   const id = req.params.id;
-  const task = await Task.findByPk(id);
+  const task = await Task.findByPk(id, {
+    include: {
+      model: Type,
+    },
+  });
   if (!task) {
     res.status(404);
     res.json({ error: "Task not found" });
@@ -109,9 +127,13 @@ router.delete('/:id', async function (req, res, next) {
   }
 });
 
-router.put('/complete/:id', async function (req, res, next) {
+router.put("/complete/:id", async function (req, res, next) {
   const id = req.params.id;
-  const task = await Task.findByPk(id);
+  const task = await Task.findByPk(id, {
+    include: {
+      model: Type,
+    },
+  });
   if (!task) {
     res.status(404);
     res.json({ error: "Task not found" });
