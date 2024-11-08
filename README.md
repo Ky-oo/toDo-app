@@ -17,14 +17,17 @@ Cette application est une API de gestion de tâches développée en Node.js avec
    cd todo-app
 
 2. Installez les dépendances :
+   ```
    npm install
 
 3. Configurer les variables d'environnement
    Creez votre fichier .env et créez les variables suivante:
+   ```
      DB_USER='votre_utilisateur'
      DB_PASSWORD='votre_mot_de_passe'
      DB_NAME='votre_nom_de_BDD'
      DB_BIS_NAME='votre_nom_de_BDD_avec_ORM'
 
-4. Démarez le serveur :
-npm run start
+5. Démarez le serveur :
+   ```
+   npm run start
