@@ -11,6 +11,7 @@ const indexRouter = require("./routes/index");
 const legacyTaskRouter = require("./routes/legacy_task");
 const taskRouter = require("./routes/task");
 const typeRouter = require("./routes/type");
+const authRouter = require("./routes/auth");
 
 const app = express();
 
@@ -31,5 +32,6 @@ app.use("/", indexRouter);
 app.use("/task", taskRouter);
 app.use("/legacy/task", legacyTaskRouter);
 app.use("/type", typeRouter);
+app.use("/auth", authRouter);
 
 module.exports = app;
