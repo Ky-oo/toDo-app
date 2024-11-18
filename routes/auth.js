@@ -66,28 +66,4 @@ router.post('/login', async (req, res) => {
   }
 });
 
-router.get('/verify_token', async (req, res) => {
-  const token = req.headers.authorization.split(' ')[1];
-
-  jwt.verify(token, process.env.JWT_PRIVATE_KEY, (err, payload) => {
-    if (err) {
-      res.status(401);
-      if(err.name === 'TokenExpiredError') {
-        res.json({ message: 'Token expired' });
-      } else {
-        res.json({ message: 'Token invalid' });
-      }
-      return;
-
-    } else {
-      res.send("welcome user number " + payload.id);  
-    }
-
-  });
-});
-
-
-
-
-
 module.exports = router;

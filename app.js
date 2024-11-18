@@ -2,6 +2,7 @@ const express = require("express");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const writeLog = require('./middleware/logger');
+const verifyToken = require('./middleware/verify_jwt_token');
 const dotenv = require("dotenv");
 dotenv.config();
 
@@ -19,6 +20,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
+app.use("/auth", authRouter);
+
 //middleware
 app.use((req, res, next) => {
   res.on('finish', () => {
@@ -27,11 +30,12 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use(verifyToken)
+
 //rooter
 app.use("/", indexRouter);
 app.use("/task", taskRouter);
 app.use("/legacy/task", legacyTaskRouter);
 app.use("/type", typeRouter);
-app.use("/auth", authRouter);
 
 module.exports = app;

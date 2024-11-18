@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { Task, Type } = require("../models");
-const { Op } = require("sequelize");
+const { Op, where } = require("sequelize");
 
 router.get("/", async function (req, res, next) {
   try {
@@ -10,8 +10,7 @@ router.get("/", async function (req, res, next) {
     const pages = req.query.pages || 0;
     const isDone = req.query.isDone;
     const isRetarded = req.query.isRetarded;
-    const where = {};
-
+    const where = {UserId: req.user_id};
     if (title) {
       where.title = { [Op.like]: `%${title}%` };
     }
@@ -53,6 +52,7 @@ router.get("/:id", async function (req, res, next) {
   const id = req.params.id;
 
   const task = await Task.findByPk(id, {
+    where: {UserId: req.user_id},
     include: {
       model: Type,
     },
@@ -77,6 +77,7 @@ router.post("/", async function (req, res, next) {
       done: false,
       dueDate: dueDate,
       TypeId: TypeId,
+      UserId: req.user_id
     });
     res.status(201);
     res.json(task);
@@ -89,6 +90,7 @@ router.put("/:id", async function (req, res, next) {
   const id = req.params.id;
   const { title, description, dueDate, done, TypeId } = req.body;
   const task = await Task.findByPk(id, {
+    where: {UserId: req.user_id},
     include: {
       model: Type,
     },
@@ -113,6 +115,7 @@ router.put("/:id", async function (req, res, next) {
 router.delete("/:id", async function (req, res, next) {
   const id = req.params.id;
   const task = await Task.findByPk(id, {
+    where: {UserId: req.user_id},
     include: {
       model: Type,
     },
@@ -130,6 +133,7 @@ router.delete("/:id", async function (req, res, next) {
 router.put("/complete/:id", async function (req, res, next) {
   const id = req.params.id;
   const task = await Task.findByPk(id, {
+    where: {UserId: req.user_id},
     include: {
       model: Type,
     },
