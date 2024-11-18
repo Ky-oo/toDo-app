@@ -5,7 +5,7 @@ function writeLog(req, res){
   const today = now.toISOString().split('T')[0];
 
   if(fs.existsSync(`./log/${today}.txt`)){
-    fs.appendFileSync(`./log/${today}.txt`, `${req.method} ${res.statusCode} - ${req.url} - ${now.toISOString()} \n`);
+    fs.appendFileSync(`./log/${today}.txt`, `${req.method} ${res.statusCode} - ${req.originalUrl} - ${now.toISOString()} \n`);
   } else {
     fs.writeFileSync(`./log/${today}.txt`,  `${req.method} ${res.statusCode} - ${req.url} - ${now.toISOString()} \n`);
   }
