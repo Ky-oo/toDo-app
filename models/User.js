@@ -1,5 +1,4 @@
 const { DataTypes } = require('sequelize');
-const bcrypt = require('bcrypt');
 
 const sequelize = require('../orm');
 
@@ -29,7 +28,7 @@ const User = sequelize.define('User', {
 });
 
 User.beforeCreate(async (user) => {
-  user.password = await bcrypt.hash(user.password, 12);
+  user.password = user.password;
 });
 
 module.exports = User;

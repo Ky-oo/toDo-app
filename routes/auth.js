@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const { User } = require('../models');
-const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { token } = require('morgan');
 
@@ -49,7 +48,7 @@ router.post('/login', async (req, res) => {
     return;
   }
 
-  const passwordOk = await bcrypt.compare(password, user.password);
+  const passwordOk = password === user.password ? true : false;
 
   if(!passwordOk) {
     res.status(404);
